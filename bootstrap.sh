@@ -10,12 +10,11 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Install brew
 # This will automatically install xcode command-line tools for us
-# FIXME: this isn't detecting sudo for some reason
 NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Ensure brew command is available in PATH
-echo 'eval "/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
-eval "/opt/homebrew/bin/brew shellenv)"
+echo '$(eval "/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Install Rosetta2 on M1 Macs
 softwareupdate --install-rosetta --agree-to-license
