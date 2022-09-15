@@ -20,7 +20,7 @@ else
 fi
 
 # Ensure brew command is available in PATH
-if [[ -z $HOMEBREW_PREFIX ]]; then
+if [[ ! $(command -v asdf) ]]; then
     if [[ $(uname -m) == "arm64" ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
     else
