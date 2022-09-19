@@ -61,18 +61,15 @@ else
     git pull
 fi
 
-# Symlink files into home directory
-for f in $HOME/dotfiles/*; do
-    if [[ ! $f == "README.md" ]] && [[ ! $f == "bootstrap.sh" ]] && [[ ! -d $f ]]; then
-        ln -sf $HOME/dotfiles/$f $HOME/.$f
-    fi
+for d in "$HOME"/dotfiles/*/ ; do
+    stow "$d"
 done
 
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
 
 # Install brew packages in the background
-brew bundle install --no-lock --file $HOME/dotfiles/deps/Brewfile 2>/dev/null &
+brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null &
 
 for p in $(awk '{print $1}' <$HOME/.tool-versions); do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
