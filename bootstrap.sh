@@ -63,6 +63,7 @@ fi
 
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
+    d=$(basename "$d")
     stow "$d"
 done
 
