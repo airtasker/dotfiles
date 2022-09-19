@@ -33,7 +33,9 @@ if [[ ! -d $HOME/.oh-my-zsh ]]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 else
     # Update Oh My Zsh if already installed
-    omz update
+    if [[ $(command -v omz) ]]; then
+    	omz update
+    fi
 fi
 
 # Install powerlevel10k
