@@ -83,6 +83,7 @@ for p in $(awk '{print $1}' <$HOME/.tool-versions); do
        sed "s/$p\ latest/$p\ $(asdf latest $p)/g" < $HOME/.tool-versions | sponge $HOME/.tool-versions
     fi
 done
+asdf install
 
 if [[ $SHELL != "$(which zsh)" ]]; then
     chsh -s $(which zsh) $USER
