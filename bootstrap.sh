@@ -77,6 +77,7 @@ for p in $(awk '{print $1}' <$HOME/.tool-versions); do
         asdf plugin add $p
     else
         asdf plugin update $p >/dev/null 2>&1
+    fi
 done
 
 if [[ $SHELL != "$(which zsh)" ]]; then
