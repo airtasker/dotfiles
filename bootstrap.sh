@@ -73,14 +73,15 @@ touch $HOME/.z
 # Install brew packages in the background
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
-for p in $(awk '{print $1}' <$HOME/.tool-versions); do
+asdf_plugins=( golang java kubectl nodejs python ruby terraform )
+for p in "${asdf_plugins[@]}"; do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
         asdf plugin add $p
     else
         asdf plugin update $p >/dev/null 2>&1
     fi
-    if [[ $(grep "$p" < $HOME/.tool-versions | awk '{print $2}')  == "latest" ]]; then
-       sed "s/$p\ latest/$p\ $(asdf latest $p)/g" < $HOME/.tool-versions | sponge $HOME/.tool-versions
+    if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
+       asdf global "$p" latest || true
     fi
 done
 asdf install
