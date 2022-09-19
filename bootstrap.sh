@@ -79,6 +79,9 @@ for p in $(awk '{print $1}' <$HOME/.tool-versions); do
     else
         asdf plugin update $p >/dev/null 2>&1
     fi
+    if [[ $(grep "$p" < $HOME/.tool-versions | awk '{print $2}')  == "latest" ]]; then
+       sed "s/$p\ latest/$p\ $(asdf latest $p)/g" < $HOME/.tool-versions | sponge $HOME/.tool-versions
+    fi
 done
 
 if [[ $SHELL != "$(which zsh)" ]]; then
