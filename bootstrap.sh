@@ -41,7 +41,7 @@ fi
 # Install powerlevel10k
 if [[ ! -d ${ZSH_CUSTOM:-$HOME/dotfiles/custom}/themes/powerlevel10k ]]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/custom}/themes/powerlevel10k
-else
+fi
 
 if [[ ! -d $HOME/.asdf ]]; then
     # Install asdf version manager
