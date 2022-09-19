@@ -71,7 +71,7 @@ done
 touch $HOME/.z
 
 # Install brew packages in the background
-brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null &
+brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
 for p in $(awk '{print $1}' <$HOME/.tool-versions); do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
