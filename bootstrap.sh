@@ -39,7 +39,7 @@ else
 fi
 
 # Install powerlevel10k
-if [[ ! -d ${ZSH_CUSTOM:-$HOME/dotfiles/custom}/themes/powerlevel10k ]]; then
+if [[ ! -d ${ZSH_CUSTOM:-$HOME/custom}/themes/powerlevel10k ]]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/custom}/themes/powerlevel10k
 fi
 
