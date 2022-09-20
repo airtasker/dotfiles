@@ -36,7 +36,7 @@ done
 
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
     # Install Oh My Zsh if not already installed
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
 else
     # Update Oh My Zsh if already installed
     if [[ $(command -v omz) ]]; then
