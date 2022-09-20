@@ -5,6 +5,11 @@ set -eou pipefail
 # Ask for the administrator password upfront
 sudo -v
 
+# Allow fingerprint to be used when sudoing 
+if ! grep -q 'pam_tid.so' </etc/pam.d/sudo; then
+  sudo echo "auth sufficient pam_tid.so"
+fi
+
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -16,7 +21,8 @@ if [[ ! $(command -v brew) ]]; then
     softwareupdate --install-rosetta --agree-to-license
 else
     # Update brew if already installed
-    brew update
+    # brew update
+    echo "hi"
 fi
 
 # Ensure brew command is available in PATH
@@ -31,7 +37,19 @@ fi
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
-    stow "$d"
+    declare -a array=( $(stow "$d" 2>&1 >/dev/null | grep "* existing target is not owned by stow:" |sed 's/^.*: //' || true) )
+    if ! (( ${#array[@]} > 0)); then
+        # If array is empty then stow was successful
+	    echo "successfully stowed $d" 
+    else
+    for file in "${array[@]}"; do
+        read -rp "Delete $file from home directory in order to sync with dotfiles? (yes/no) " remove_file
+        if [[ "$remove_file" = y* ]]; then
+            rm -f "$HOME"/"$file"
+        fi
+    done
+    if [[ "$remove_file" = y* ]]; then stow "$d"; fi
+    fi
 done
 
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
@@ -82,7 +100,6 @@ touch $HOME/.z
 
 # Install brew packages in the background
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
-
 asdf_plugins=( golang java kubectl nodejs python ruby terraform )
 for p in "${asdf_plugins[@]}"; do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
@@ -90,6 +107,7 @@ for p in "${asdf_plugins[@]}"; do
     else
         asdf plugin update $p >/dev/null 2>&1
     fi
+    touch $HOME/.tool-versions
     if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
        asdf global "$p" latest || true
     fi
