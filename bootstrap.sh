@@ -109,10 +109,11 @@ for p in "${asdf_plugins[@]}"; do
     fi
     touch $HOME/.tool-versions
     if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
+       asdf install "$p" latest
        asdf global "$p" latest || true
     fi
 done
-asdf install
+asdf install 
 
 if [[ $SHELL != "$(which zsh)" ]]; then
     chsh -s $(which zsh) $USER
