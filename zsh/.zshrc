@@ -77,7 +77,7 @@ zstyle ':omz:update' frequency 13
 HIST_STAMPS="yyyy-mm-dd"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM="$HOME/dotfiles/custom"
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
