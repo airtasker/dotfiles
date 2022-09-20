@@ -28,6 +28,12 @@ if [[ ! $(command -v brew) ]]; then
     fi
 fi
 
+brew install stow
+for d in "$HOME"/dotfiles/*/ ; do
+    d=$(basename "$d")
+    stow "$d"
+done
+
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
     # Install Oh My Zsh if not already installed
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
@@ -60,12 +66,6 @@ else
     cd $HOME/dotfiles
     git pull
 fi
-
-brew install stow
-for d in "$HOME"/dotfiles/*/ ; do
-    d=$(basename "$d")
-    stow "$d"
-done
 
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
