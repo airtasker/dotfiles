@@ -21,8 +21,7 @@ if [[ ! $(command -v brew) ]]; then
     softwareupdate --install-rosetta --agree-to-license
 else
     # Update brew if already installed
-    # brew update
-    echo "hi"
+    brew update
 fi
 
 # Ensure brew command is available in PATH
@@ -37,7 +36,7 @@ fi
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
-    declare -a array=( $(stow "$d" 2>&1 >/dev/null | grep "* existing target is not owned by stow:" |sed 's/^.*: //' || true) )
+    mapfile -t array < <(stow "$d" 2>&1 >/dev/null | grep "* existing target is not owned by stow:" |sed 's/^.*: //' || true)
     if ! (( ${#array[@]} > 0)); then
         # If array is empty then stow was successful
 	    echo "successfully stowed $d" 
