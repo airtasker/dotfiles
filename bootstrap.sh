@@ -106,8 +106,10 @@ fi
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
 
-# Install brew packages in the background
+# Install brew packages
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
+
+# Install ASDF plugins and install latest packages by default
 asdf_plugins=( golang java kubectl nodejs python ruby terraform )
 for p in "${asdf_plugins[@]}"; do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
