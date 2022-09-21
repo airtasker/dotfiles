@@ -8,6 +8,23 @@ sudo -v
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
+# Source Environment
+mkdir -p $HOME/environment
+touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
+for file in $(find -L $HOME/environment -type f -name "*.zsh"); do 
+    source "${file}"
+done
+
+# Read from user
+if [ -z ${GITHUB_EMAIL+x} ]; then 
+    read -p "Enter Github Email: " GITHUB_EMAIL
+    echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/secrets.zsh
+fi
+if [ -z ${GITHUB_PAT+x} ]; then 
+    read -p "Enter Github Personal Access Token: " GITHUB_PAT
+    echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/secrets.zsh
+fi
+
 if [[ ! $(command -v brew) ]]; then
     # Install brew if not already installed
     # This will automatically install xcode command-line tools for us
@@ -28,6 +45,16 @@ if [[ ! $(command -v brew) ]]; then
     fi
 fi
 
+# Setup SSH Key
+brew install gh
+# Get Serial Number
+serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
+echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+    ssh-keygen -t ed25519 -C "$github_email" -f $HOME/.ssh/id_ed25519
+    gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
+fi
+
 DOTFILES_REPO=${DOTFILES_REPO:-airtasker\/dotfiles.git}
 if [[ ! -d $HOME/dotfiles ]]; then
     # Clone airtasker dotfiles locally
@@ -41,6 +68,7 @@ fi
 # Install NvChad (neovim config providing solid defaults and beautiful UI)
 if [[ ! -d $HOME/.config/nvim ]]; then
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+    nvim
 fi
 
 # Install Stow and Symlink stow packages (dotfiles)
