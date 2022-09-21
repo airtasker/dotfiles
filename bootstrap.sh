@@ -7,7 +7,7 @@ sudo -v
 
 # Allow fingerprint to be used when sudoing 
 if ! grep -q 'pam_tid.so' </etc/pam.d/sudo; then
-  sudo echo "auth sufficient pam_tid.so"
+  sudo echo "auth sufficient pam_tid.so" >/etc/pam.d/sudo
 fi
 
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
