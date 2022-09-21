@@ -45,7 +45,7 @@ for d in "$HOME"/dotfiles/*/ ; do
     mapfile -t array < <(stow "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true)
     if ! (( ${#array[@]} > 0)); then
         # If array is empty then stow was successful
-	    echo "successfully stowed $d" 
+	    echo "successfully stowed $d"
     else
     for file in "${array[@]}"; do
         read -rp "Delete $file from home directory in order to sync with dotfiles? (yes/no) " remove_file
@@ -118,7 +118,7 @@ for p in "${asdf_plugins[@]}"; do
        asdf global "$p" latest || true
     fi
 done
-asdf install 
+asdf install
 
 if [[ $SHELL != "$(which zsh)" ]]; then
     chsh -s $(which zsh) $USER
