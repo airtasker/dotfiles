@@ -43,6 +43,7 @@ else
     git pull
 fi
 
+# Install Stow and Symlink stow packages (dotfiles)
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
