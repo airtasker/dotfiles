@@ -38,6 +38,11 @@ else
     git pull
 fi
 
+# Install NvChad (neovim config providing solid defaults and beautiful UI)
+if [[ ! -d $HOME/.config/nvim ]]; then
+    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+fi
+
 # Install Stow and Symlink stow packages (dotfiles)
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
@@ -91,11 +96,6 @@ fi
 if [[ ! $(command -v asdf) ]]; then
     . $HOME/.asdf/asdf.sh
     . $HOME/.asdf/completions/asdf.bash
-fi
-
-# Install NvChad (neovim config providing solid defaults and beautiful UI)
-if [[ ! -d $HOME/.config/nvim ]]; then
-    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
