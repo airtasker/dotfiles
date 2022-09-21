@@ -5,11 +5,6 @@ set -eou pipefail
 # Ask for the administrator password upfront
 sudo -v
 
-# Allow fingerprint to be used when sudoing 
-if ! grep -q 'pam_tid.so' </etc/pam.d/sudo; then
-  sudo echo "auth sufficient pam_tid.so" >/etc/pam.d/sudo
-fi
-
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
