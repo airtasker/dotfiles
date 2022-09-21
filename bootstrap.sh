@@ -33,10 +33,20 @@ if [[ ! $(command -v brew) ]]; then
     fi
 fi
 
+DOTFILES_REPO=${DOTFILES_REPO:-airtasker\/dotfiles.git}
+if [[ ! -d $HOME/dotfiles ]]; then
+    # Clone airtasker dotfiles locally
+    git clone https://github.com/"$DOTFILES_REPO" $HOME/dotfiles
+    cd $HOME/dotfiles
+else
+    cd $HOME/dotfiles
+    git pull
+fi
+
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
-    mapfile -t array < <(stow "$d" 2>&1 >/dev/null | grep "* existing target is not owned by stow:" |sed 's/^.*: //' || true)
+    mapfile -t array < <(stow "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true)
     if ! (( ${#array[@]} > 0)); then
         # If array is empty then stow was successful
 	    echo "successfully stowed $d" 
@@ -76,22 +86,15 @@ if [[ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 fi
 
+# Install asdf version manager
 if [[ ! -d $HOME/.asdf ]]; then
-    # Install asdf version manager
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
 fi
+
+# Verify asdf command exists and source otherwise
 if [[ ! $(command -v asdf) ]]; then
     . $HOME/.asdf/asdf.sh
     . $HOME/.asdf/completions/asdf.bash
-fi
-
-if [[ ! -d $HOME/dotfiles ]]; then
-    # Clone airtasker dotfiles locally
-    git clone https://github.com/airtasker/dotfiles.git $HOME/dotfiles
-    cd $HOME/dotfiles
-else
-    cd $HOME/dotfiles
-    git pull
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
