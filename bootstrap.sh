@@ -97,6 +97,11 @@ if [[ ! $(command -v asdf) ]]; then
     . $HOME/.asdf/completions/asdf.bash
 fi
 
+# Install NvChad (neovim config providing solid defaults and beautiful UI)
+if [[ ! -d $HOME/.config/nvim ]]; then
+    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+fi
+
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
 
