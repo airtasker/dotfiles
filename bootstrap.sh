@@ -132,6 +132,10 @@ touch $HOME/.z
 # Install brew packages
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
+# Setup git
+git config --global user.name "$(gh api user | jq -r '.login')"
+git config --global user.email "${GITHUB_EMAIL}"
+
 # Install ASDF plugins and install latest packages by default
 asdf_plugins=( golang java kubectl nodejs python ruby terraform )
 for p in "${asdf_plugins[@]}"; do
