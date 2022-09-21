@@ -104,6 +104,13 @@ ZSH_DISABLE_COMPFIX=true
 
 source $ZSH/oh-my-zsh.sh
 
+# Source ~/environment recursively
+mkdir -p $HOME/environment
+touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
+for file in $(find -L $HOME/environment -type f -name "*.zsh"); do
+    source "${file}"
+done
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
