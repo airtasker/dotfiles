@@ -1,6 +1,6 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-set -eou pipefail
+set -eo pipefail
 
 # Ask for the administrator password upfront
 sudo -v
@@ -45,6 +45,9 @@ if [[ ! $(command -v brew) ]]; then
     fi
 fi
 
+# Install brew packages
+brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
+
 # Setup SSH Key
 brew install gh
 # Get Serial Number
@@ -75,13 +78,13 @@ fi
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
-    mapfile -t array < <(stow "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true)
+    array=( $(stow "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true) )
     if ! (( ${#array[@]} > 0)); then
         # If array is empty then stow was successful
 	    echo "successfully stowed $d"
     else
     for file in "${array[@]}"; do
-        read -rp "Delete $file from home directory in order to sync with dotfiles? (yes/no) " remove_file
+        read -q "remove_file?Delete $file from home directory in order to sync with dotfiles? (yes/no) "
         if [[ "$remove_file" = y* ]]; then
             rm -f "$HOME"/"$file"
         fi
@@ -128,9 +131,6 @@ fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
-
-# Install brew packages
-brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
 # Setup git
 git config --global user.name "$(gh api user | jq -r '.login')"
