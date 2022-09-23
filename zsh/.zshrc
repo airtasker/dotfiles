@@ -104,10 +104,10 @@ ZSH_DISABLE_COMPFIX=true
 
 source $ZSH/oh-my-zsh.sh
 
-# Source ~/environment recursively
+# Source ~/environment recursively for files ending with *.rc *.zsh *.sh
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f -name "*.zsh"); do
+for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) ); do 
     source "${file}"
 done
 

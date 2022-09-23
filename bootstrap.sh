@@ -11,7 +11,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Source Environment
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f -name "*.zsh"); do 
+for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) ); do 
     source "${file}"
 done
 
