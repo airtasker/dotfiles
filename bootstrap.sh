@@ -11,7 +11,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Source Environment
 mkdir -p $HOME/environment
-touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
+touch $HOME/environment/environment.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
 for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) ); do 
     source "${file}"
 done
@@ -19,11 +19,11 @@ done
 # Read from user
 if [ -z ${GITHUB_EMAIL+x} ]; then 
     read "GITHUB_EMAIL?Enter Github Email: "
-    echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/secrets.zsh
+    echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/environment.zsh
 fi
 if [ -z ${GITHUB_PAT+x} ]; then 
     read "GITHUB_PAT?Enter Github Peraonl Access Token: "
-    echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/secrets.zsh
+    echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
 fi
 
 if [[ ! $(command -v brew) ]]; then
@@ -75,7 +75,6 @@ brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 # Install NvChad (neovim config providing solid defaults and beautiful UI)
 if [[ ! -d $HOME/.config/nvim ]]; then
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
-    nvim
 fi
 
 # Install Stow and Symlink stow packages (dotfiles)
@@ -163,4 +162,5 @@ if [[ $SHELL != "$(which zsh)" ]]; then
     chsh -s $(which zsh) $USER
 fi
 
+echo 'Run `p10k configure` to finish customizing your terminal'
 echo "Bootstrap complete."
