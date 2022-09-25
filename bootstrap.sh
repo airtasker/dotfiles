@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
+set -u
 set -eo pipefail
 
 # Ask for the administrator password upfront
@@ -17,11 +18,11 @@ done
 
 # Read from user
 if [ -z ${GITHUB_EMAIL+x} ]; then 
-    read -p "Enter Github Email: " GITHUB_EMAIL
+    read "GITHUB_EMAIL?Enter Github Email: "
     echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/secrets.zsh
 fi
 if [ -z ${GITHUB_PAT+x} ]; then 
-    read -p "Enter Github Personal Access Token: " GITHUB_PAT
+    read "GITHUB_PAT?Enter Github Peraonl Access Token: "
     echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/secrets.zsh
 fi
 
@@ -45,28 +46,31 @@ if [[ ! $(command -v brew) ]]; then
     fi
 fi
 
-# Install brew packages
-brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
-
 # Setup SSH Key
 brew install gh
 # Get Serial Number
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
 if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+    echo "####### Writing SSH Key #######"
     ssh-keygen -t ed25519 -C "$github_email" -f $HOME/.ssh/id_ed25519
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
 
 DOTFILES_REPO=${DOTFILES_REPO:-airtasker\/dotfiles.git}
 if [[ ! -d $HOME/dotfiles ]]; then
+    # Add github.com to known hosts to avoid prompt
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
     # Clone airtasker dotfiles locally
-    git clone https://github.com/"$DOTFILES_REPO" $HOME/dotfiles
+    git clone git@github.com:"$DOTFILES_REPO" $HOME/dotfiles
     cd $HOME/dotfiles
 else
     cd $HOME/dotfiles
     git pull
 fi
+
+# Install brew packages
+brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
 # Install NvChad (neovim config providing solid defaults and beautiful UI)
 if [[ ! -d $HOME/.config/nvim ]]; then
@@ -84,7 +88,7 @@ for d in "$HOME"/dotfiles/*/ ; do
 	    echo "successfully stowed $d"
     else
     for file in "${array[@]}"; do
-        read -q "remove_file?Delete $file from home directory in order to sync with dotfiles? (yes/no) "
+        read -q "remove_file?Delete $file from home directory in order to sync with dotfiles? (y/n) "
         if [[ "$remove_file" = y* ]]; then
             rm -f "$HOME"/"$file"
         fi
@@ -126,15 +130,18 @@ fi
 # Verify asdf command exists and source otherwise
 if [[ ! $(command -v asdf) ]]; then
     . $HOME/.asdf/asdf.sh
-    . $HOME/.asdf/completions/asdf.bash
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
 
 # Setup git
-git config --global user.name "$(gh api user | jq -r '.login')"
-git config --global user.email "${GITHUB_EMAIL}"
+if ! git config user.name; then 
+  git config --global user.name "$(gh api user | jq -r '.login')"
+fi
+if ! git config user.email; then
+  git config --global user.email "${GITHUB_EMAIL}"
+fi
 
 # Install ASDF plugins and install latest packages by default
 asdf_plugins=( golang java kubectl nodejs python ruby terraform )
@@ -157,4 +164,3 @@ if [[ $SHELL != "$(which zsh)" ]]; then
 fi
 
 echo "Bootstrap complete."
-
