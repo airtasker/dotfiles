@@ -41,3 +41,20 @@ function brew() {
       ;;
   esac
 }
+# function to return main branch
+git_main_branch () {
+	command git rev-parse --git-dir &> /dev/null || return
+	local ref
+	for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk}
+	do
+		if command git show-ref -q --verify $ref
+		then
+			echo ${ref:t}
+			return
+		fi
+	done
+	echo master
+}
+
+# Nicely formatted diff for announcements - Alias here as it depends on function above
+alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)%an    %s' --abbrev-commit"

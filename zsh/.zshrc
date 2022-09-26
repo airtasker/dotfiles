@@ -108,7 +108,7 @@ source $ZSH/oh-my-zsh.sh
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
 for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) ); do 
-    source "${file}"
+    . "${file}"
 done
 
 # User configuration
