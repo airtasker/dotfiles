@@ -173,5 +173,6 @@ fi
 
 zsh install_fonts.sh
 
+nvim
 echo 'Run `p10k configure` to finish customizing your terminal'
 echo "Bootstrap complete."
