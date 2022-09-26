@@ -6,6 +6,20 @@ set -eo pipefail
 # Ask for the administrator password upfront
 sudo -v
 
+## Functions
+# Ensure brew command is available in PATH
+function brew_in_path() {
+    if [[ $(uname -m) == "arm64" ]]; then
+        if [[ -f /opt/homebrew/bin/brew ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+    else
+        if [[ -f /usr/local/Homebrew/bin/brew ]]; then
+            eval "$(/usr/local/Homebrew/bin/brew shellenv)"
+        fi
+    fi
+}
+
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
@@ -26,6 +40,8 @@ if [ -z ${GITHUB_PAT+x} ]; then
     echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
 fi
 
+brew_in_path
+
 if [[ ! $(command -v brew) ]]; then
     # Install brew if not already installed
     # This will automatically install xcode command-line tools for us
@@ -37,14 +53,7 @@ else
     brew update
 fi
 
-# Ensure brew command is available in PATH
-if [[ ! $(command -v brew) ]]; then
-    if [[ $(uname -m) == "arm64" ]]; then
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    else
-        eval "$(/usr/local/Homebrew/bin/brew shellenv)"
-    fi
-fi
+brew_in_path
 
 # Setup SSH Key
 brew install gh
@@ -67,17 +76,6 @@ if [[ ! -d $HOME/dotfiles ]]; then
 else
     cd $HOME/dotfiles
     git pull
-fi
-
-# Ensure brew is available in the environment
-if [[ $(uname -m) == "arm64" ]]; then
-    if [[ -f /opt/homebrew/bin/brew ]]; then 
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
-else
-    if [[ -f /usr/local/Homebrew/bin/brew ]]; then 
-        eval "$(/usr/local/Homebrew/bin/brew shellenv)"
-    fi
 fi
 
 # Install brew packages
