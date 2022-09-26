@@ -28,9 +28,7 @@ if [[ "$(uname)" == Darwin && $TERM_PROGRAM == iTerm.app ]]; then
   [[ $font == 'MesloLGSNer-Regular '<-> ]] && iterm2_old_font=1
   iterm2_font_size=$match[1]
   terminal=iTerm2
-  return 0
 fi
-return 1
 
 
 command mkdir -p -- ~/Library/Fonts || exit
