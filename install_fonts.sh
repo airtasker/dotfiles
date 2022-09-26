@@ -86,4 +86,3 @@ echo 'It is important to restart iTerm2 by following the instructions above. \
             It is not enough to close iTerm2 by clicking on the red circle. You must \
             click iTerm2 → Quit iTerm2 or press "%B⌘ Q%b.'
 fi
-echo "FONT_INSTALLED=true" >> $HOME/environment/environment.zsh
