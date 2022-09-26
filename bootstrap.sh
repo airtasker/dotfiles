@@ -69,6 +69,17 @@ else
     git pull
 fi
 
+# Ensure brew is available in the environment
+if [[ $(uname -m) == "arm64" ]]; then
+    if [[ -f /opt/homebrew/bin/brew ]]; then 
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+else
+    if [[ -f /usr/local/Homebrew/bin/brew ]]; then 
+        eval "$(/usr/local/Homebrew/bin/brew shellenv)"
+    fi
+fi
+
 # Install brew packages
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 
@@ -128,7 +139,7 @@ fi
 
 # Verify asdf command exists and source otherwise
 if [[ ! $(command -v asdf) ]]; then
-    . $HOME/.asdf/asdf.sh
+    source $HOME/.asdf/asdf.sh
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
