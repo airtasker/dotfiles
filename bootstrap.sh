@@ -162,5 +162,9 @@ if [[ $SHELL != "$(which zsh)" ]]; then
     chsh -s $(which zsh) $USER
 fi
 
+if [[ ${FONT_INSTALLED:-false} != "true" ]]; then
+    zsh install_fonts.sh
+fi
+
 echo 'Run `p10k configure` to finish customizing your terminal'
 echo "Bootstrap complete."
