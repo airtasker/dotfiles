@@ -173,6 +173,9 @@ fi
 
 zsh install_fonts.sh
 
-nvim
+if [[ ${NVIM_FIRST_RUN:-false} != "true" ]]; then
+    nvim
+    echo "NVIM_FIRST_RUN=true" >> $HOME/environment/environment.zsh
+fi
 echo 'Run `p10k configure` to finish customizing your terminal'
 echo "Bootstrap complete."
