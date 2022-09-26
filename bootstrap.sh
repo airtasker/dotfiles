@@ -62,7 +62,7 @@ serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: /
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
 if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
     echo "####### Writing SSH Key #######"
-    ssh-keygen -t ed25519 -C "$github_email" -f $HOME/.ssh/id_ed25519
+    ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
 
@@ -177,5 +177,6 @@ if [[ ${NVIM_FIRST_RUN:-false} != "true" ]]; then
     nvim
     echo "NVIM_FIRST_RUN=true" >> $HOME/environment/environment.zsh
 fi
+
 echo 'Run `p10k configure` to finish customizing your terminal'
 echo "Bootstrap complete."
