@@ -23,11 +23,14 @@ function brew_in_path() {
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Source Environment
+# Source ~/environment recursively for files ending with *.rc *.zsh *.sh
 mkdir -p $HOME/environment
-touch $HOME/environment/environment.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) ); do 
-    source "${file}"
+touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
+for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) | sort ); do
+    if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
+      echo "Now sourcing ${file}"
+    fi
+    . "${file}"
 done
 
 # Read from user
@@ -80,11 +83,6 @@ fi
 
 # Install brew packages
 brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
-
-# Install NvChad (neovim config providing solid defaults and beautiful UI)
-if [[ ! -d $HOME/.config/nvim ]]; then
-    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
-fi
 
 # Install Stow and Symlink stow packages (dotfiles)
 brew install stow
@@ -168,15 +166,26 @@ done
 asdf install
 
 if [[ $SHELL != "$(which zsh)" ]]; then
+    echo "$(which zsh)" | sudo sponge -a /etc/shells
     chsh -s $(which zsh) $USER
 fi
 
-zsh install_fonts.sh
-
 if [[ ${NVIM_FIRST_RUN:-false} != "true" ]]; then
+    # Uninstall NvChad
+    rm -rf ~/.config/nvim
+    rm -rf ~/.local/share/nvim
+    rm -rf ~/.cache/nvim
+    # Install NvChad
+    git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
     nvim
+    cd ~/dotfiles
+    stow nvim
+    # Add NVIM_FIRST_RUN variable to environment
+    export NVIM_FIRST_RUN=true
     echo "NVIM_FIRST_RUN=true" >> $HOME/environment/environment.zsh
 fi
 
+echo "###################
+Bootstrap complete.
+###################"
 echo 'Run `p10k configure` to finish customizing your terminal'
-echo "Bootstrap complete."

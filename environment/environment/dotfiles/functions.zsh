@@ -66,3 +66,19 @@ account=$(printf ${@} | sed 's:.*\.::')
 asp "${account}-${role}"
 /opt/homebrew/bin/kubectx "$@"
 }
+
+# Install NvChad (neovim config providing solid defaults and beautiful UI)
+function install_nvchad() {
+  if [[ ! -d $HOME/.config/nvim ]]; then
+      git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+  fi
+  nvim
+  cd ~/dotfiles
+  stow nvim
+}
+# Uninstall NvChad
+function uninstall_nvchad() {
+  rm -rf ~/.config/nvim
+  rm -rf ~/.local/share/nvim
+  rm -rf ~/.cache/nvim
+}
