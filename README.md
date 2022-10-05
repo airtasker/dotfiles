@@ -25,7 +25,7 @@ For instance, I can edit ```~/environment/environment.zsh``` with
 ```
 export RANDOM_KEY=verysecure
 ```
-If you open a new terminal or ```source ~/.zshrc``` then that variable will be sourced in your environment
+You can open a new terminal or ```source ~/.zshrc``` then that variable will be sourced in your environment
 
 If you do edit files in ```~/environment/dotfiles``` then those will be tracked by github as those have been symlinked to that directory from this repository.
 
