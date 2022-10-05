@@ -114,6 +114,16 @@ else
     fi
 fi
 
+# Add kubectx completion
+if [[ ! -f ~/.oh-my-zsh/completions/_kubectx.zsh ]]; then
+    mkdir -p ~/.oh-my-zsh/completions
+    curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubectx.zsh > ~/.oh-my-zsh/completions/_kubectx.zsh
+fi 
+# Add kubens completion
+if [[ ! -f ~/.oh-my-zsh/completions/_kubens.zsh ]]; then
+    curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubens.zsh > ~/.oh-my-zsh/completions/_kubens.zsh
+fi 
+
 # Install zsh-autosuggestions
 if [[ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; then
     git clone --depth=1 https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"/plugins/zsh-autosuggestions
