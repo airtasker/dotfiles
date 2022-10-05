@@ -61,10 +61,6 @@ The bootstrap.sh sets up your mac for first use
 * Installs NvChad to make your vim spectactular
 * Installs a great default tmux config 
 
-
-
-
-
 ### Dotfiles Structure
 The dotfiles are powered by a tool called `stow`.
 stow is a simple tool that creates symlinks of folders in the current directory and links them to the parent directory. 
