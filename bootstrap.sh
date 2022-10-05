@@ -88,7 +88,7 @@ brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 brew install stow
 for d in "$HOME"/dotfiles/*/ ; do
     d=$(basename "$d")
-    array=( $(stow "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true) )
+    array=( $(stow -t $HOME "$d" 2>&1 >/dev/null | grep "* existing targe" |sed 's/^.*: //' || true) )
     if ! (( ${#array[@]} > 0)); then
         # If array is empty then stow was successful
 	    echo "successfully stowed $d"
@@ -99,7 +99,7 @@ for d in "$HOME"/dotfiles/*/ ; do
             rm -f "$HOME"/"$file"
         fi
     done
-    if [[ "$remove_file" = y* ]]; then stow "$d"; fi
+    if [[ "$remove_file" = y* ]]; then stow -t $HOME "$d"; fi
     fi
 done
 
@@ -179,7 +179,7 @@ if [[ ${NVIM_FIRST_RUN:-false} != "true" ]]; then
     git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
     nvim
     cd ~/dotfiles
-    stow nvim
+    stow -t $HOME nvim
     # Add NVIM_FIRST_RUN variable to environment
     export NVIM_FIRST_RUN=true
     echo "NVIM_FIRST_RUN=true" >> $HOME/environment/environment.zsh
