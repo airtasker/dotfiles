@@ -11,7 +11,18 @@ This is a quick guide to get your setup up and running!
     cd ~/dotfiles
     ./bootstrap.sh
     ```
-2. Configure P10K 
+2. Enter Github Email and Github Personal Access Token
+    The script will prompt the user for their Github email. Once entered, the data is saved in ```~/environment/environment.zsh``` so that you don't need to be prompted again
+    The script will also ask for a Github Personal Access Token which can be added here: https://github.com/settings/tokens
+    The minimum required scope is:
+      ```
+      repo
+      read:org
+      write:public_key
+      ```
+    Althogh more permissions may be useful if you plan to use the ```gh``` cli for other functions      
+
+3. Configure P10K 
     ```
     source ~/.zshrc && p10k configure
     ```
@@ -52,6 +63,7 @@ ruby 3.1.2
 ### What does bootstrap script do? 
 The bootstrap.sh sets up your mac for first use
 * It installs brew and then uses brew to install more tools found in ```Brewfile```. 
+* Creates new SSH key and uses the ```gh``` command line tool to add that key to your github account. (Script will prompt for Github Personal Access Token)
 * Installs the ```asdf``` version manager tool and also installs the latest version of these tools
     * golang 
     * kubectl 
