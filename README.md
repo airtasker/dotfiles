@@ -22,9 +22,10 @@ This is a quick guide to get your setup up and running!
       ```
     Althogh more permissions may be useful if you plan to use the ```gh``` cli for other functions      
 
-3. Configure P10K 
+3. Configure P10K
+    Open iTerm2 and run command below
     ```
-    source ~/.zshrc && p10k configure
+    p10k configure
     ```
 
 ### Adding variables, aliases and functions
