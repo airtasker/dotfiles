@@ -26,10 +26,10 @@ export RANDOM_KEY=verysecure
 If you open a new terminal or ```source ~/.zshrc``` then that variable will be sourced in your environment
 
 ### Using asdf 
-```asdf```` is one of the tools installed by the bootstrap script. 
+```asdf``` is one of the tools installed by the bootstrap script. 
 asdf is a version manager designed to support many different tools making it the one version manager to rule them all! 
 asdf is really simple, first you need to make sure you have the plugin of the tool you want to install.
- 
+
 e.g. To install nodejs version 18.9.0 just run the following. 
 ```
 asdf plugin add nodejs
