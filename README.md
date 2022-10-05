@@ -17,7 +17,9 @@ This is a quick guide to get your setup up and running!
     ```
 
 ### Adding variables, aliases and functions
-Your ZSH environment will automatically scan any files ending with ```.sh``` ```.zsh``` ```.rc``` in your ```~/environment``` directory. So if you need to add a new environment variable, ensure it exists in ```~/environment```. A couple empty files have already been added like ```~/environment/aliases.zsh``` ready to receive your own aliases and functions. These files won't be tracked in git so you can use them to store secrets and other variables. If you do edit files in ```~/environment/dotfiles``` then those will be tracked by github as those have been symlinked to that directory. 
+Your ZSH environment will automatically scan any files ending with ```.sh``` ```.zsh``` ```.rc``` in your ```~/environment``` directory. So if you need to add a new environment variable, ensure it exists in ```~/environment```. 
+A couple empty files have already been added like ```~/environment/aliases.zsh``` ready to receive your own aliases and functions. These files won't be tracked in git so you can use them to store secrets and other variables. 
+If you do edit files in ```~/environment/dotfiles``` then those will be tracked by github as those have been symlinked to that directory from this repository.
 
 For instance, I can edit ```~/environment/environment.zsh``` with 
 ```
