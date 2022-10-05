@@ -150,7 +150,7 @@ if ! git config user.email; then
 fi
 
 # Install ASDF plugins and install latest packages by default
-asdf_plugins=( golang java kubectl nodejs python ruby terraform )
+asdf_plugins=( golang kubectl nodejs python ruby terraform )
 for p in "${asdf_plugins[@]}"; do
     if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
         asdf plugin add $p
