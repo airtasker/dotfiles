@@ -153,7 +153,7 @@ if [[ ! -d $HOME/.asdf ]]; then
 fi
 
 if [[ ! -f ~/.tool-versions ]]; then 
-    source $HOME/.asdf/asdf.sh
+    . $HOME/.asdf/asdf.sh
     # Install ASDF plugins and install latest packages by default
     asdf_plugins=( golang kubectl nodejs python ruby terraform )
     for p in "${asdf_plugins[@]}"; do
