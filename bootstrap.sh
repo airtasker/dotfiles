@@ -38,7 +38,7 @@ if [ -z ${GITHUB_EMAIL+x} ]; then
     echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/environment.zsh
 fi
 if [ -z ${GITHUB_PAT+x} ]; then 
-    read "GITHUB_PAT?Enter Github Peraonl Access Token: "
+    read "GITHUB_PAT?Enter Github Peronal Access Token: "
     echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
 fi
 

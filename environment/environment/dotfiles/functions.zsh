@@ -59,14 +59,6 @@ git_main_branch () {
 # Nicely formatted diff for announcements - Alias here as it depends on function above
 alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)%an    %s' --abbrev-commit"
 
-#Switch AWS Context as well
-function kubectx() {
-role=$(printf ${@} | grep -oE '(engineer|admin)')
-account=$(printf ${@} | sed 's:.*\.::')
-asp "${account}-${role}"
-/opt/homebrew/bin/kubectx "$@"
-}
-
 # Install NvChad (neovim config providing solid defaults and beautiful UI)
 function install_nvchad() {
   if [[ ! -d $HOME/.config/nvim ]]; then
