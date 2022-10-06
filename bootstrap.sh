@@ -65,6 +65,7 @@ serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: /
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
 if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
     echo "####### Writing SSH Key #######"
+    echo "####### Optional - Type in passphrase for newly created SSH Key #######"
     ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
@@ -112,6 +113,16 @@ else
     	omz update
     fi
 fi
+
+# Add kubectx completion
+if [[ ! -f ~/.oh-my-zsh/completions/_kubectx.zsh ]]; then
+    mkdir -p ~/.oh-my-zsh/completions
+    curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubectx.zsh > ~/.oh-my-zsh/completions/_kubectx.zsh
+fi 
+# Add kubens completion
+if [[ ! -f ~/.oh-my-zsh/completions/_kubens.zsh ]]; then
+    curl -fsSL https://raw.githubusercontent.com/ahmetb/kubectx/master/completion/_kubens.zsh > ~/.oh-my-zsh/completions/_kubens.zsh
+fi 
 
 # Install zsh-autosuggestions
 if [[ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; then
