@@ -144,9 +144,23 @@ if [[ ! -d $HOME/.asdf ]]; then
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
 fi
 
-# Verify asdf command exists and source otherwise
-if [[ ! $(command -v asdf) ]]; then
-    source $HOME/.asdf/asdf.sh
+if [[ ! -f ~/.tool-versions ]]; then 
+    source ~/.zshrc
+    # Install ASDF plugins and install latest packages by default
+    asdf_plugins=( golang kubectl nodejs python ruby terraform )
+    for p in "${asdf_plugins[@]}"; do
+        if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
+            asdf plugin add $p
+        else
+            asdf plugin update $p >/dev/null 2>&1
+        fi
+        touch $HOME/.tool-versions
+        if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
+        asdf install "$p" latest
+        asdf global "$p" latest || true
+        fi
+    done
+    asdf install
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
@@ -159,22 +173,6 @@ fi
 if ! git config user.email; then
   git config --global user.email "${GITHUB_EMAIL}"
 fi
-
-# Install ASDF plugins and install latest packages by default
-asdf_plugins=( golang kubectl nodejs python ruby terraform )
-for p in "${asdf_plugins[@]}"; do
-    if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
-        asdf plugin add $p
-    else
-        asdf plugin update $p >/dev/null 2>&1
-    fi
-    touch $HOME/.tool-versions
-    if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
-       asdf install "$p" latest
-       asdf global "$p" latest || true
-    fi
-done
-asdf install
 
 if [[ $SHELL != "$(which zsh)" ]]; then
     echo "$(which zsh)" | sudo sponge -a /etc/shells
