@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
-set -u
 set -eo pipefail
 
 # Ask for the administrator password upfront
