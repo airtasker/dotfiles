@@ -204,4 +204,4 @@ fi
 echo "###################
 Bootstrap complete.
 ###################"
-echo 'Run `p10k configure` to finish customizing your terminal'
+echo 'Open iTerm 2 Application and run `p10k configure` to finish customizing your terminal'
