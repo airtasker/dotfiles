@@ -74,7 +74,7 @@ brew install gh
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 public_key=$(cat $HOME/.ssh/id_ed25519.pub)
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
-if ! gh ssh-key list | grep -q "${public_key:0:20}"; then 
+if ! gh ssh-key list | grep -q "${public_key:0:50}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub || true
 fi
 
