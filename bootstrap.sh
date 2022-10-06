@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
-set -u
 set -eo pipefail
 
 # Ask for the administrator password upfront
@@ -43,6 +42,17 @@ if [ -z ${GITHUB_PAT+x} ]; then
     echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
 fi
 
+# Create SSH Key
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+    echo "####### Writing SSH Key #######"
+    echo "####### Optional - Type in passphrase for newly created SSH Key #######"
+    ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
+
+    # Add SSHKeys to keychain
+    echo "Type in SSH Key Passphrase to add this key to your keychain (The one you entered above)"
+    for file in ~/.ssh/*.pub; do ssh-add -q --apple-use-keychain "${file%.*}";done
+fi
+
 brew_in_path
 
 if [[ ! $(command -v brew) ]]; then
@@ -58,15 +68,12 @@ fi
 
 brew_in_path
 
-# Setup SSH Key
+# Add SSH Key to Github Account
 brew install gh
 # Get Serial Number
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
-if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
-    echo "####### Writing SSH Key #######"
-    echo "####### Optional - Type in passphrase for newly created SSH Key #######"
-    ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
+if ! gh ssh-key list | grep -q "$(hostname)-${serial_number}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
 
@@ -144,9 +151,23 @@ if [[ ! -d $HOME/.asdf ]]; then
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
 fi
 
-# Verify asdf command exists and source otherwise
-if [[ ! $(command -v asdf) ]]; then
-    source $HOME/.asdf/asdf.sh
+if [[ ! -f ~/.tool-versions ]]; then 
+    . $HOME/.asdf/asdf.sh
+    # Install ASDF plugins and install latest packages by default
+    asdf_plugins=( golang kubectl nodejs python ruby terraform )
+    for p in "${asdf_plugins[@]}"; do
+        if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
+            asdf plugin add $p
+        else
+            asdf plugin update $p >/dev/null 2>&1
+        fi
+        touch $HOME/.tool-versions
+        if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
+        asdf install "$p" latest
+        asdf global "$p" latest || true
+        fi
+    done
+    asdf install
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run
@@ -159,22 +180,6 @@ fi
 if ! git config user.email; then
   git config --global user.email "${GITHUB_EMAIL}"
 fi
-
-# Install ASDF plugins and install latest packages by default
-asdf_plugins=( golang kubectl nodejs python ruby terraform )
-for p in "${asdf_plugins[@]}"; do
-    if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
-        asdf plugin add $p
-    else
-        asdf plugin update $p >/dev/null 2>&1
-    fi
-    touch $HOME/.tool-versions
-    if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
-       asdf install "$p" latest
-       asdf global "$p" latest || true
-    fi
-done
-asdf install
 
 if [[ $SHELL != "$(which zsh)" ]]; then
     echo "$(which zsh)" | sudo sponge -a /etc/shells
