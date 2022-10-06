@@ -74,7 +74,7 @@ brew install gh
 # Get Serial Number
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
-if gh ssh-key list | grep -q "$(hostname)-${serial_number}"; then 
+if ! gh ssh-key list | grep -q "$(hostname)-${serial_number}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
 
@@ -153,7 +153,7 @@ if [[ ! -d $HOME/.asdf ]]; then
 fi
 
 if [[ ! -f ~/.tool-versions ]]; then 
-    source ~/.zshrc
+    source $HOME/.asdf/asdf.sh
     # Install ASDF plugins and install latest packages by default
     asdf_plugins=( golang kubectl nodejs python ruby terraform )
     for p in "${asdf_plugins[@]}"; do
