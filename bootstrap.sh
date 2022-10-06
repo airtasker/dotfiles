@@ -43,6 +43,17 @@ if [ -z ${GITHUB_PAT+x} ]; then
     echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
 fi
 
+# Create SSH Key
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+    echo "####### Writing SSH Key #######"
+    echo "####### Optional - Type in passphrase for newly created SSH Key #######"
+    ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
+
+    # Add SSHKeys to keychain
+    echo "Type in SSH Key Passphrase to add this key to your keychain (The one you entered above)"
+    for file in ~/.ssh/*.pub; do ssh-add -q --apple-use-keychain "${file%.*}";done
+fi
+
 brew_in_path
 
 if [[ ! $(command -v brew) ]]; then
@@ -58,15 +69,12 @@ fi
 
 brew_in_path
 
-# Setup SSH Key
+# Add SSH Key to Github Account
 brew install gh
 # Get Serial Number
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
-if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
-    echo "####### Writing SSH Key #######"
-    echo "####### Optional - Type in passphrase for newly created SSH Key #######"
-    ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
+if gh ssh-key list | grep -q "$(hostname)-${serial_number}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub
 fi
 
