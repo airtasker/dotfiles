@@ -5,11 +5,9 @@ The Airtasker dotfiles is a simple repo that installs a selection of standard to
 ## Setup
 This is a quick guide to get your setup up and running!
 
-1. Clone repo, cd into ~/dotfiles and run bootstrap command
+1. Run bootstrap.sh script
     ```
-    git clone git@github.com:airtasker/dotfiles
-    cd ~/dotfiles
-    ./bootstrap.sh
+    zsh -c "$(curl -fsSL https://raw.githubusercontent.com/airtasker/dotfiles/main/bootstrap.sh)"
     ```
 2. Enter Github Email and Github Personal Access Token
     
