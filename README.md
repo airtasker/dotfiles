@@ -29,6 +29,12 @@ This is a quick guide to get your setup up and running!
     ```
     p10k configure
     ```
+4. Post Install steps
+    To install default asdf versions, run
+    ```
+    asdf_install_defaults
+    ```
+
 
 ### Adding variables, aliases and functions
 Your ZSH environment will automatically scan any files ending with ```.sh``` ```.zsh``` ```.rc``` in your ```~/environment``` directory. So if you need to add a new environment variable, ensure it exists in ```~/environment```. 
