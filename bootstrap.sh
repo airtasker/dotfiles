@@ -71,7 +71,6 @@ brew_in_path
 # Add SSH Key to Github Account
 brew install gh
 # Get Serial Number
-set -x 
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 public_key=$(cat $HOME/.ssh/id_ed25519.pub)
 export GITHUB_TOKEN="${GITHUB_TOKEN}"
@@ -79,7 +78,6 @@ gh auth login -p ssh -h github.com > /dev/null
 if ! gh ssh-key list | grep -q "${public_key:0:50}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub || true
 fi
-set +x
 
 DOTFILES_REPO=${DOTFILES_REPO:-airtasker\/dotfiles.git}
 if [[ ! -d $HOME/dotfiles ]]; then
