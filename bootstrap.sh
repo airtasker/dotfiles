@@ -152,25 +152,6 @@ if [[ ! -d $HOME/.asdf ]]; then
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
 fi
 
-if [[ ! -f ~/.tool-versions ]]; then 
-    . $HOME/.asdf/asdf.sh
-    # Install ASDF plugins and install latest packages by default
-    asdf_plugins=( golang kubectl nodejs python ruby terraform )
-    for p in "${asdf_plugins[@]}"; do
-        if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
-            asdf plugin add $p
-        else
-            asdf plugin update $p >/dev/null 2>&1
-        fi
-        touch $HOME/.tool-versions
-        if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
-        asdf install "$p" latest
-        asdf global "$p" latest || true
-        fi
-    done
-    asdf install
-fi
-
 # Ensure $HOME/.z exists to suppress warning on first run
 touch $HOME/.z
 
