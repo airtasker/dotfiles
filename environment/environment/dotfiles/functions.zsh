@@ -59,6 +59,23 @@ git_main_branch () {
 # Nicely formatted diff for announcements - Alias here as it depends on function above
 alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)%an    %s' --abbrev-commit"
 
+# Install asdf defaults
+asdf_install_defaults() {
+  asdf_plugins=( golang kubectl nodejs python ruby terraform )
+  for p in "${asdf_plugins[@]}"; do
+      if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
+          asdf plugin add $p
+      else
+          asdf plugin update $p >/dev/null 2>&1
+      fi
+      touch $HOME/.tool-versions
+      if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
+      asdf install "$p" latest
+      asdf global "$p" latest || true
+      fi
+  done
+}
+
 # Install NvChad (neovim config providing solid defaults and beautiful UI)
 function install_nvchad() {
   if [[ ! -d $HOME/.config/nvim ]]; then
