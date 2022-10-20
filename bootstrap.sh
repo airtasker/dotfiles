@@ -90,8 +90,8 @@ else
     git pull
 fi
 
-# Install brew packages
-brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
+# Install essential brew packages
+sed -n '/essential_start_marker/,/essential_end_marker/p' $HOME/dotfiles/Brewfile | brew bundle install --no-lock --file=- 2>/dev/null
 
 # Install Stow and Symlink stow packages (dotfiles)
 brew install stow
