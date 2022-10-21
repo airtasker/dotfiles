@@ -37,9 +37,9 @@ if [ -z ${GITHUB_EMAIL+x} ]; then
     read "GITHUB_EMAIL?Enter Github Email: "
     echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/environment.zsh
 fi
-if [ -z ${GITHUB_PAT+x} ]; then 
-    read "GITHUB_PAT?Enter Github Peronal Access Token: "
-    echo "GITHUB_PAT=${GITHUB_PAT}" >> $HOME/environment/environment.zsh
+if [ -z ${GITHUB_TOKEN+x} ]; then 
+    read "GITHUB_TOKEN?Enter Github Peronal Access Token: "
+    echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
 fi
 
 # Create SSH Key
@@ -73,7 +73,8 @@ brew install gh
 # Get Serial Number
 serial_number=$(system_profiler SPHardwareDataType | grep Serial | sed 's/^.*: //')
 public_key=$(cat $HOME/.ssh/id_ed25519.pub)
-echo "$GITHUB_PAT" | gh auth login --with-token -p ssh -h github.com
+export GITHUB_TOKEN="${GITHUB_TOKEN}"
+gh auth login -p ssh -h github.com > /dev/null
 if ! gh ssh-key list | grep -q "${public_key:0:50}"; then 
     gh ssh-key add -t "$(hostname)-${serial_number}" $HOME/.ssh/id_ed25519.pub || true
 fi
