@@ -153,6 +153,7 @@ if [[ ! -d $HOME/.asdf ]]; then
     git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
 fi
 
+# Add default asdf plugins
 if [[ ! -f ~/.tool-versions ]]; then 
     . $HOME/.asdf/asdf.sh
     # Install ASDF plugins and install latest packages by default
@@ -164,12 +165,7 @@ if [[ ! -f ~/.tool-versions ]]; then
             asdf plugin update $p >/dev/null 2>&1
         fi
         touch $HOME/.tool-versions
-        if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
-        asdf install "$p" latest
-        asdf global "$p" latest || true
-        fi
     done
-    asdf install
 fi
 
 # Ensure $HOME/.z exists to suppress warning on first run

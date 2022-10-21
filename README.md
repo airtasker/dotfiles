@@ -27,8 +27,11 @@ This is a quick guide to get your setup up and running!
     ```
     p10k configure
     ```
-4. Install other common brew packages
+
+4. Post Install steps
+    To install default asdf versions and other common brew packages
     ```
+    install_asdf_defaults
     install_brew_defaults
     ```
 
