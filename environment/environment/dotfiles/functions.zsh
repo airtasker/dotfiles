@@ -65,7 +65,7 @@ brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
 alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)%an    %s' --abbrev-commit"
 
 # Install asdf defaults
-asdf_install_defaults() {
+install_asdf_defaults() {
   asdf_plugins=( golang kubectl nodejs python ruby terraform )
   for p in "${asdf_plugins[@]}"; do
       if [[ ! -d $HOME/.asdf/plugins/$p ]]; then

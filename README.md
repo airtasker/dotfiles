@@ -31,7 +31,7 @@ This is a quick guide to get your setup up and running!
 4. Post Install steps
     To install default asdf versions and other common brew packages
     ```
-    asdf_install_defaults
+    install_asdf_defaults
     install_brew_defaults
     ```
 
