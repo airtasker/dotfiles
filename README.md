@@ -5,11 +5,9 @@ The Airtasker dotfiles is a simple repo that installs a selection of standard to
 ## Setup
 This is a quick guide to get your setup up and running!
 
-1. Clone repo, cd into ~/dotfiles and run bootstrap command
+1. Run bootstrap.sh script
     ```
-    git clone git@github.com:airtasker/dotfiles
-    cd ~/dotfiles
-    ./bootstrap.sh
+    zsh -c "$(curl -fsSL https://raw.githubusercontent.com/airtasker/dotfiles/main/bootstrap.sh)"
     ```
 2. Enter Github Email and Github Personal Access Token
     
@@ -29,12 +27,13 @@ This is a quick guide to get your setup up and running!
     ```
     p10k configure
     ```
+
 4. Post Install steps
-    To install default asdf versions, run
+    To install default asdf versions and other common brew packages
     ```
     asdf_install_defaults
+    install_brew_defaults
     ```
-
 
 ### Adding variables, aliases and functions
 Your ZSH environment will automatically scan any files ending with ```.sh``` ```.zsh``` ```.rc``` in your ```~/environment``` directory. So if you need to add a new environment variable, ensure it exists in ```~/environment```. 

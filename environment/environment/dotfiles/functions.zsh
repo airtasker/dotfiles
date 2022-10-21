@@ -56,6 +56,11 @@ git_main_branch () {
 	echo master
 }
 
+# Install brew packages
+function install_brew_defaults() {
+brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
+}
+
 # Nicely formatted diff for announcements - Alias here as it depends on function above
 alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)%an    %s' --abbrev-commit"
 
