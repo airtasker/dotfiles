@@ -94,6 +94,7 @@ plugins=(
     kubectl
     vscode
     z
+    ssh-agent
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
