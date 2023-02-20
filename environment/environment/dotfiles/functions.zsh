@@ -26,21 +26,6 @@ function cleanup-local-branches {
   git branch -vv | grep 'origin/.*: gone]' | awk '{print $1}' | xargs git branch -D
 }
 
-# Intercept well-intentioned brew commands that will break things
-function brew() {
-  case $@ in
-    *elasticsearch|*mysql|*node|*nodenv|*nvm|*postgresql|*rbenv|*ruby|*rvm|*yarn)
-      if [[ $1 == "install" || $1 == "upgrade" ]]; then
-        echo "Here be dragons, you don't need to do this, ask someone for guidance..."
-      else
-        command brew $@
-      fi
-      ;;
-    *)
-      command brew $@
-      ;;
-  esac
-}
 # function to return main branch
 git_main_branch () {
 	command git rev-parse --git-dir &> /dev/null || return
