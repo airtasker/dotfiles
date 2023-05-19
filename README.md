@@ -19,6 +19,7 @@ This is a quick guide to get your setup up and running!
       repo
       read:org
       write:public_key
+      admin:ssh_signing_key
       ```
     Althogh more permissions may be useful if you plan to use the ```gh``` cli for other functions      
 
