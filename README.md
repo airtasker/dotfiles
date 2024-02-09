@@ -20,6 +20,7 @@ This is a quick guide to get your setup up and running!
       read:org
       write:public_key
       admin:ssh_signing_key
+      read:packages
       ```
     Althogh more permissions may be useful if you plan to use the ```gh``` cli for other functions      
 
