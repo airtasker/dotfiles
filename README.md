@@ -9,11 +9,11 @@ This is a quick guide to get your setup up and running!
     ```
     zsh -c "$(curl -fsSL https://raw.githubusercontent.com/airtasker/dotfiles/main/bootstrap.sh)"
     ```
-2. Enter Github Email and Github Personal Access Token
+2. Enter Github Email and Github Personal Access Token (classic)
     
     The script will prompt the user for their Github email. Once entered, the data is saved in ```~/environment/environment.zsh``` so that you don't need to be prompted again
     
-    The script will also ask for a Github Personal Access Token which can be added here: https://github.com/settings/tokens
+    The script will also ask for a Github Personal Access Token (classic) which can be added here: https://github.com/settings/tokens
     The minimum required scope is:
       ```
       repo
