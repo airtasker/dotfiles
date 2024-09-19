@@ -1,8 +1,6 @@
 # essential_start_marker
 tap "homebrew/autoupdate"
 tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
 tap "homebrew/services"
 brew "ansible"
 brew "bash"
