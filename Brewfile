@@ -1,7 +1,5 @@
 # essential_start_marker
 tap "homebrew/autoupdate"
-tap "homebrew/bundle"
-tap "homebrew/services"
 brew "ansible"
 brew "bash"
 brew "curl"
