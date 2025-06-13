@@ -43,7 +43,7 @@ git_main_branch () {
 
 # Install brew packages
 function install_brew_defaults() {
-brew bundle install --no-lock --file $HOME/dotfiles/Brewfile 2>/dev/null
+brew bundle install --file $HOME/dotfiles/Brewfile 2>/dev/null
 }
 
 # Nicely formatted diff for announcements - Alias here as it depends on function above
@@ -61,7 +61,7 @@ install_asdf_defaults() {
       touch $HOME/.tool-versions
       if ! grep "$p" < $HOME/.tool-versions >/dev/null 2>&1 ; then
       asdf install "$p" latest
-      asdf global "$p" latest || true
+      asdf set --home "$p" latest || true
       fi
   done
 }
