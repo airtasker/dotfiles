@@ -148,14 +148,15 @@ if [[ ! -d ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k ]]; then
     git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 fi
 
+omz theme set powerlevel10k/powerlevel10k
+
 # Install asdf version manager
 if [[ ! -d $HOME/.asdf ]]; then
-    git clone https://github.com/asdf-vm/asdf.git $HOME/.asdf --branch v0.10.2
+    brew install asdf
 fi
 
 # Add default asdf plugins
 if [[ ! -f ~/.tool-versions ]]; then 
-    . $HOME/.asdf/asdf.sh
     # Install ASDF plugins and install latest packages by default
     asdf_plugins=( golang kubectl nodejs python ruby terraform )
     for p in "${asdf_plugins[@]}"; do

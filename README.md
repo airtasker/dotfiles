@@ -24,9 +24,17 @@ This is a quick guide to get your setup up and running!
       ```
     Althogh more permissions may be useful if you plan to use the ```gh``` cli for other functions      
 
-3. Configure P10K
-    Open iTerm2 and run command below
+3. Set ZSH_THEME to and configure P10K
+
+    Check `~/.zshrc` and make sure the `ZSH_THEME` is correct
     ```
+    ...
+    export ZSH_THEME="powerlevel10k/powerlevel10k"
+    ...
+    ```
+    Open iTerm2 and run the commands below
+    ```
+    source ~/.zshrc
     p10k configure
     ```
 
@@ -59,9 +67,11 @@ e.g. To install nodejs version 18.9.0 just run the following.
 ```
 asdf plugin add nodejs
 asdf install nodejs 18.9.0
-asdf global nodejs 18.9.0
+asdf set --home nodejs 18.9.0
 ```
-Running the ```asdf global``` command will edit the ```~/.tool-versions``` file which contains the default versions for your system and running ```asdf local``` will edit your current directory ```.tool-versions``` file. Every time you change directory, asdf will check if a ```.tool-versions``` file exists, and if it does will use the versions defined in that file. 
+Running ```asdf set --home``` or ```asdf set -u``` command will edit the ```~/.tool-versions``` file which contains the default versions for your system. 
+
+Running ```asdf set``` will edit your current directory's ```.tool-versions``` file. Every time you change directory, asdf will check if a ```.tool-versions``` file exists, and if it does will use the versions defined in that file. This is useful for setting versions of tools across different projects.
 
 If you enter a directory which has a ```.tool-versions``` file like this and then run ```asdf install``` it will check that file and install the versions defined here allowing you to get setup quickly
 ```
