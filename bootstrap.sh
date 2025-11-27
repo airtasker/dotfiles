@@ -42,8 +42,30 @@ if [ -z ${GITHUB_TOKEN+x} ]; then
     echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
 fi
 
-# Create SSH Key
-if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+# Create or Rotate SSH Key
+should_generate_key=false
+
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then
+    should_generate_key=true
+else
+    read -q "rotate_key?SSH key already exists. Do you want to rotate your GitHub SSH key? (y/n) "
+    echo  # newline after response
+    if [[ "$rotate_key" = y* ]]; then
+        echo "####### Rotating SSH Key #######"
+        # Backup old keys
+        mv $HOME/.ssh/id_ed25519 $HOME/.ssh/id_ed25519.backup
+        mv $HOME/.ssh/id_ed25519.pub $HOME/.ssh/id_ed25519.pub.backup
+
+        # Remove old key from GitHub
+        old_public_key=$(cat $HOME/.ssh/id_ed25519.pub.backup)
+        echo "Removing old SSH key from GitHub..."
+        gh ssh-key list | grep "${old_public_key:0:50}" | awk '{print $1}' | xargs -I {} gh ssh-key delete {} -y 2>/dev/null || true
+
+        should_generate_key=true
+    fi
+fi
+
+if [[ "$should_generate_key" = true ]]; then
     echo "####### Writing SSH Key #######"
     echo "####### Optional - Type in passphrase for newly created SSH Key #######"
     ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
