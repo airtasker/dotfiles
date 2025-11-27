@@ -57,6 +57,7 @@ fi
 read "input_token?Enter Github Personal Access Token [${token_display}]: "
 if [[ -n "$input_token" ]]; then
     GITHUB_TOKEN="$input_token"
+    sed -i '' '/^GITHUB_TOKEN=/d' $HOME/environment/environment.zsh
     echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
 elif [[ -z "$current_token" ]]; then
     echo "ERROR: GITHUB_TOKEN is required"
@@ -74,9 +75,6 @@ if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then
     # Add SSHKeys to keychain
     echo "Type in SSH Key Passphrase to add this key to your keychain (The one you entered above)"
     for file in ~/.ssh/*.pub; do ssh-add -q --apple-use-keychain "${file%.*}";done
-else
-    echo "SSH key already exists at ~/.ssh/id_ed25519"
-    echo "To rotate your SSH key, run: $HOME/dotfiles/rotate-ssh-key.sh"
 fi
 
 brew_in_path
