@@ -33,39 +33,40 @@ for file in $(find -L $HOME/environment -type f \( -name "*.rc" -o -name "*.zsh"
 done
 
 # Read from user
-if [ -z ${GITHUB_EMAIL+x} ]; then 
-    read "GITHUB_EMAIL?Enter Github Email: "
+# Prompt for GITHUB_EMAIL with default
+current_email="${GITHUB_EMAIL:-}"
+read "input_email?Enter Github Email [${current_email}]: "
+if [[ -n "$input_email" ]]; then
+    GITHUB_EMAIL="$input_email"
+    sed -i '' '/^GITHUB_EMAIL=/d' $HOME/environment/environment.zsh
     echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/environment.zsh
-fi
-if [ -z ${GITHUB_TOKEN+x} ]; then 
-    read "GITHUB_TOKEN?Enter Github Peronal Access Token: "
-    echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
-fi
-
-# Create or Rotate SSH Key
-should_generate_key=false
-
-if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then
-    should_generate_key=true
+elif [[ -z "$current_email" ]]; then
+    echo "ERROR: GITHUB_EMAIL is required"
+    exit 1
 else
-    read -q "rotate_key?SSH key already exists. Do you want to rotate your GitHub SSH key? (y/n) "
-    echo  # newline after response
-    if [[ "$rotate_key" = y* ]]; then
-        echo "####### Rotating SSH Key #######"
-        # Backup old keys
-        mv $HOME/.ssh/id_ed25519 $HOME/.ssh/id_ed25519.backup
-        mv $HOME/.ssh/id_ed25519.pub $HOME/.ssh/id_ed25519.pub.backup
-
-        # Remove old key from GitHub
-        old_public_key=$(cat $HOME/.ssh/id_ed25519.pub.backup)
-        echo "Removing old SSH key from GitHub..."
-        gh ssh-key list | grep "${old_public_key:0:50}" | awk '{print $1}' | xargs -I {} gh ssh-key delete {} -y 2>/dev/null || true
-
-        should_generate_key=true
-    fi
+    GITHUB_EMAIL="$current_email"
 fi
 
-if [[ "$should_generate_key" = true ]]; then
+# Prompt for GITHUB_TOKEN with default
+current_token="${GITHUB_TOKEN:-}"
+if [[ -n "$current_token" ]]; then
+    token_display="(already set)"
+else
+    token_display=""
+fi
+read "input_token?Enter Github Personal Access Token [${token_display}]: "
+if [[ -n "$input_token" ]]; then
+    GITHUB_TOKEN="$input_token"
+    echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
+elif [[ -z "$current_token" ]]; then
+    echo "ERROR: GITHUB_TOKEN is required"
+    exit 1
+else
+    GITHUB_TOKEN="$current_token"
+fi
+
+# Create SSH Key
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then
     echo "####### Writing SSH Key #######"
     echo "####### Optional - Type in passphrase for newly created SSH Key #######"
     ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519
@@ -73,6 +74,9 @@ if [[ "$should_generate_key" = true ]]; then
     # Add SSHKeys to keychain
     echo "Type in SSH Key Passphrase to add this key to your keychain (The one you entered above)"
     for file in ~/.ssh/*.pub; do ssh-add -q --apple-use-keychain "${file%.*}";done
+else
+    echo "SSH key already exists at ~/.ssh/id_ed25519"
+    echo "To rotate your SSH key, run: $HOME/dotfiles/rotate-ssh-key.sh"
 fi
 
 brew_in_path
