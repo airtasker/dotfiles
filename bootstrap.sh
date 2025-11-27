@@ -25,7 +25,7 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # Source ~/environment recursively for files ending with *.rc *.zsh *.sh
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) | sort ); do
+for file in $(find -L $HOME/environment -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) -not -path "*/airtasker/*" | sort ); do
     if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
       echo "Now sourcing ${file}"
     fi
