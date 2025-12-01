@@ -4,9 +4,11 @@ set -eo pipefail
 
 echo "####### SSH Key Rotation Script #######"
 
-# Source environment to get GITHUB_EMAIL
-for file in $(find -L $HOME/environment -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) -not -path "*/airtasker/*" | sort ); do
-    . "${file}"
+# Source environment files to get GITHUB_EMAIL and GITHUB_TOKEN
+for file in environment.zsh secrets.zsh aliases.zsh functions.zsh; do
+    if [[ -f $HOME/environment/${file} ]]; then
+        . "$HOME/environment/${file}"
+    fi
 done
 
 # Prompt for GITHUB_EMAIL with default

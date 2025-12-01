@@ -22,14 +22,18 @@ function brew_in_path() {
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Source ~/environment recursively for files ending with *.rc *.zsh *.sh
+# Source environment files
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) -not -path "*/airtasker/*" | sort ); do
-    if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
-      echo "Now sourcing ${file}"
+
+# Source only the explicitly defined environment files
+for file in environment.zsh secrets.zsh aliases.zsh functions.zsh; do
+    if [[ -f $HOME/environment/${file} ]]; then
+        if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
+            echo "Now sourcing $HOME/environment/${file}"
+        fi
+        . "$HOME/environment/${file}"
     fi
-    . "${file}"
 done
 
 # Read from user
