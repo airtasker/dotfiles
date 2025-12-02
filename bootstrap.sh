@@ -22,28 +22,56 @@ function brew_in_path() {
 # Keep-alive: update existing `sudo` time stamp until `bootstrap.sh` has finished
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
-# Source ~/environment recursively for files ending with *.rc *.zsh *.sh
+# Source environment files
 mkdir -p $HOME/environment
 touch $HOME/environment/environment.zsh $HOME/environment/secrets.zsh $HOME/environment/aliases.zsh $HOME/environment/functions.zsh
-for file in $(find -L $HOME/environment -type f -type f \( -name "*.rc" -o -name "*.zsh" -o -name "*.sh" \) | sort ); do
-    if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
-      echo "Now sourcing ${file}"
+
+# Source only the explicitly defined environment files
+for file in environment.zsh secrets.zsh aliases.zsh functions.zsh; do
+    if [[ -f $HOME/environment/${file} ]]; then
+        if [[ ${DEBUG:-FALSE} == "TRUE" ]]; then
+            echo "Now sourcing $HOME/environment/${file}"
+        fi
+        . "$HOME/environment/${file}"
     fi
-    . "${file}"
 done
 
 # Read from user
-if [ -z ${GITHUB_EMAIL+x} ]; then 
-    read "GITHUB_EMAIL?Enter Github Email: "
+# Prompt for GITHUB_EMAIL with default
+current_email="${GITHUB_EMAIL:-}"
+read "input_email?Enter Github Email [${current_email}]: "
+if [[ -n "$input_email" ]]; then
+    GITHUB_EMAIL="$input_email"
+    sed -i '' '/^GITHUB_EMAIL=/d' $HOME/environment/environment.zsh
     echo "GITHUB_EMAIL=${GITHUB_EMAIL}" >> $HOME/environment/environment.zsh
+elif [[ -z "$current_email" ]]; then
+    echo "ERROR: GITHUB_EMAIL is required"
+    exit 1
+else
+    GITHUB_EMAIL="$current_email"
 fi
-if [ -z ${GITHUB_TOKEN+x} ]; then 
-    read "GITHUB_TOKEN?Enter Github Peronal Access Token: "
+
+# Prompt for GITHUB_TOKEN with default
+current_token="${GITHUB_TOKEN:-}"
+if [[ -n "$current_token" ]]; then
+    token_display="(already set)"
+else
+    token_display=""
+fi
+read "input_token?Enter Github Personal Access Token [${token_display}]: "
+if [[ -n "$input_token" ]]; then
+    GITHUB_TOKEN="$input_token"
+    sed -i '' '/^GITHUB_TOKEN=/d' $HOME/environment/environment.zsh
     echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
+elif [[ -z "$current_token" ]]; then
+    echo "ERROR: GITHUB_TOKEN is required"
+    exit 1
+else
+    GITHUB_TOKEN="$current_token"
 fi
 
 # Create SSH Key
-if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then 
+if [[ ! -f $HOME/.ssh/id_ed25519 ]]; then
     echo "####### Writing SSH Key #######"
     echo "####### Optional - Type in passphrase for newly created SSH Key #######"
     ssh-keygen -t ed25519 -C "$GITHUB_EMAIL" -f $HOME/.ssh/id_ed25519

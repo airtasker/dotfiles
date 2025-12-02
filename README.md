@@ -18,7 +18,7 @@ This is a quick guide to get your setup up and running!
       ```
       repo
       read:org
-      write:public_key
+      admin:public_key
       admin:ssh_signing_key
       read:packages
       ```
