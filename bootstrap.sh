@@ -63,6 +63,8 @@ if [[ -n "$input_token" ]]; then
     GITHUB_TOKEN="$input_token"
     sed -i '' '/^GITHUB_TOKEN=/d' $HOME/environment/environment.zsh
     echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> $HOME/environment/environment.zsh
+    sed -i '' '/^GITHUB_PACKAGES_TOKEN=/d' $HOME/environment/environment.zsh
+    echo "GITHUB_PACKAGES_TOKEN=\$GITHUB_TOKEN" >> $HOME/environment/environment.zsh
 elif [[ -z "$current_token" ]]; then
     echo "ERROR: GITHUB_TOKEN is required"
     exit 1
