@@ -51,7 +51,7 @@ alias deploydiff="git log production..$(git_main_branch) --pretty=format:'%<(23)
 
 # Install asdf defaults
 install_asdf_defaults() {
-  asdf_plugins=( golang kubectl nodejs python ruby terraform )
+  asdf_plugins=( golang kubectl nodejs pnpm postgres python ruby terraform )
   for p in "${asdf_plugins[@]}"; do
       if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
           asdf plugin add $p
@@ -80,4 +80,24 @@ function uninstall_nvchad() {
   rm -rf ~/.config/nvim
   rm -rf ~/.local/share/nvim
   rm -rf ~/.cache/nvim
+}
+
+# Configure Ruby for Rails development (pg gem, bundler settings)
+function setup_ruby_for_rails() {
+  echo "Configuring bundler for native extensions..."
+
+  # Check if postgres is installed via asdf
+  if asdf where postgres &>/dev/null; then
+    echo "✓ Configuring pg gem to use asdf postgres"
+    bundle config build.pg --with-pg-config=$(asdf where postgres)/bin/pg_config
+  else
+    echo "⚠ Warning: postgres not found in asdf. Install with: asdf plugin add postgres && asdf install postgres latest"
+  fi
+
+  # Set common bundler configs
+  bundle config set --local path 'vendor/bundle'
+  bundle config set --local jobs 4
+
+  echo "✓ Ruby configured for Rails development"
+  echo "  Run 'bundle install' in your Rails project to install gems"
 }
