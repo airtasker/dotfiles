@@ -186,7 +186,7 @@ fi
 # Add default asdf plugins
 if [[ ! -f ~/.tool-versions ]]; then 
     # Install ASDF plugins and install latest packages by default
-    asdf_plugins=( golang kubectl nodejs pnpm python ruby terraform )
+    asdf_plugins=( golang kubectl nodejs pnpm postgres python ruby terraform )
     for p in "${asdf_plugins[@]}"; do
         if [[ ! -d $HOME/.asdf/plugins/$p ]]; then
             asdf plugin add $p

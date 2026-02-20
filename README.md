@@ -85,15 +85,30 @@ The bootstrap.sh sets up your mac for first use
 * It installs brew and then uses brew to install more tools found in ```Brewfile```. 
 * Creates new SSH key and uses the ```gh``` command line tool to add that key to your github account. (Script will prompt for Github Personal Access Token)
 * Installs the ```asdf``` version manager tool and also installs the latest version of these tools
-    * golang 
-    * kubectl 
-    * nodejs 
-    * python 
-    * ruby 
+    * golang
+    * kubectl
+    * nodejs
+    * pnpm (Node.js package manager)
+    * postgres (PostgreSQL client tools for Rails development)
+    * python
+    * ruby
     * terraform
 * Installs oh-my-zsh and powerlevel10k to make your terminal look great!
 * Installs NvChad to make your vim spectactular
-* Installs a great default tmux config 
+* Installs a great default tmux config
+
+### Rails Project Setup
+
+After running the bootstrap script, set up a Rails project with these commands:
+
+```bash
+cd your-rails-project
+asdf install                      # Install project-specific versions from .tool-versions
+setup_ruby_for_rails             # Configure bundler for pg gem and native extensions
+bundle install                   # Install gems
+```
+
+The `setup_ruby_for_rails` function automatically configures the `pg` gem to compile against asdf-installed PostgreSQL, preventing common native extension compilation errors. 
 
 ### Dotfiles Structure
 The dotfiles are powered by a tool called `stow`.
